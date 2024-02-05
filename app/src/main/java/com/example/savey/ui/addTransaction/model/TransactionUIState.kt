@@ -1,4 +1,4 @@
-package com.example.savey.ui.transaction.model
+package com.example.savey.ui.addTransaction.model
 
 data class TransactionUIState(
     val transactionDetails: TransactionDetails = TransactionDetails(),

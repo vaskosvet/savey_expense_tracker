@@ -2,8 +2,8 @@ package com.example.savey.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.savey.ui.transaction.model.TransactionDetails
-import com.example.savey.ui.transaction.model.TransactionUIState
+import com.example.savey.ui.addTransaction.model.TransactionDetails
+import com.example.savey.ui.addTransaction.model.TransactionUIState
 import java.text.NumberFormat
 
 @Entity(tableName = "transactions")

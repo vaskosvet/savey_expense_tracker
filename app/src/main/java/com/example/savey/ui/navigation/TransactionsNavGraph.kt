@@ -5,8 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.savey.ui.transaction.TransactionEntryDestination
-import com.example.savey.ui.transaction.TransactionEntryScreen
+import com.example.savey.ui.addTransaction.TransactionEntryDestination
+import com.example.savey.ui.addTransaction.TransactionEntryScreen
+import com.example.savey.ui.home.HomeDestination
+import com.example.savey.ui.home.HomeScreen
 
 @Composable
 fun TransactionsNavHost(
@@ -19,7 +21,10 @@ fun TransactionsNavHost(
         modifier = modifier
     ) {
         composable(TransactionEntryDestination.route) {
-            TransactionEntryScreen(navigateBack = { /*TODO*/ }, onNavigateUp = { /*TODO*/ })
+            TransactionEntryScreen(navigateBack = { navController.popBackStack() }, onNavigateUp = { /*TODO*/ })
+        }
+        composable(HomeDestination.route) {
+            HomeScreen(navigateToTransactionEntry = { /*TODO*/ }, navigateToTransactionUpdate = { /*TODO*/ })
         }
     }
 }

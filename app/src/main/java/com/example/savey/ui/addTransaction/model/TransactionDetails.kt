@@ -1,4 +1,4 @@
-package com.example.savey.ui.transaction.model
+package com.example.savey.ui.addTransaction.model
 
 import com.example.savey.data.TransactionEntity
 
