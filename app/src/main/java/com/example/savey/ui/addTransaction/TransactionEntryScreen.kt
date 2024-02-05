@@ -13,18 +13,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.savey.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.savey.R
 import com.example.savey.SaveyTopAppBar
+import com.example.savey.UtilsConstants.Companion.TRANSACTION_ENTRY_ROUTE
 import com.example.savey.ui.navigation.NavigationDestination
 import com.example.savey.ui.addTransaction.model.TransactionDetails
 import com.example.savey.ui.addTransaction.model.TransactionUIState
 import kotlinx.coroutines.launch
 
 object TransactionEntryDestination : NavigationDestination {
-    override val route = "transaction_entry"
-//    override val titleRes = R.string.item_entry_title
+    override val route = TRANSACTION_ENTRY_ROUTE
+    override val titleRes = R.string.enter_a_new_transaction
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +42,7 @@ fun TransactionEntryScreen(
     Scaffold(
         topBar = {
             SaveyTopAppBar(
-                title = "Add a transaction",
+                title = stringResource(id = R.string.enter_a_new_transaction),
                 canNavigateBack = true,
                 navigateUp = onNavigateUp
             )
@@ -71,28 +74,38 @@ fun TransactionEntryBody(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp/*dimensionResource(id = R.dimen.padding_large)*/)) {
+        verticalArrangement = Arrangement.spacedBy(16.dp)) {
         OutlinedTextField(
-            value = transactionUIState.transactionDetails.price,
-            onValueChange = { onTransactionValueChange(transactionUIState.transactionDetails.copy(price = it, type = 1)) },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("price") }
+            value = transactionUIState.transactionDetails.price,
+            onValueChange = {
+                onTransactionValueChange(transactionUIState.transactionDetails.copy(price = it, type = 1))
+            },
+            shape = MaterialTheme.shapes.large,
+            label = {
+                Text(text = stringResource(id = R.string.price))
+            }
         )
 
         OutlinedTextField(
-            value = transactionUIState.transactionDetails.merchant,
-            onValueChange = { onTransactionValueChange(transactionUIState.transactionDetails.copy(merchant = it)) },
             modifier = Modifier.fillMaxWidth(),
-            label   = { Text(text = "Merchant") }
+            value = transactionUIState.transactionDetails.merchant,
+            onValueChange = {
+                onTransactionValueChange(transactionUIState.transactionDetails.copy(merchant = it))
+            },
+            shape = MaterialTheme.shapes.large,
+            label   = {
+                Text(text = stringResource(id = R.string.merchant))
+            }
         )
 
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = onSaveClick,
             enabled = transactionUIState.isEntryValid,
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
+            shape = MaterialTheme.shapes.large
         ) {
-            Text(text = "save")
+            Text(text = stringResource(id = R.string.save).uppercase())
         }
     }
 }

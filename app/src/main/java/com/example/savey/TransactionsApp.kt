@@ -37,7 +37,7 @@ fun SaveyTopAppBar(
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = null // TODO stringResource(string.back_button)
+                        contentDescription = null
                     )
                 }
             }

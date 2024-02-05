@@ -14,7 +14,7 @@ class TransactionEntryViewModel(private val transactionsRepository: Transactions
 
     private fun validateInput(uiState: TransactionDetails = transactionUIState.transactionDetails): Boolean {
         return with(uiState) {
-            type != 0 && price.isNotBlank()
+            type != 0 && price.isNotBlank() // TODO improve validation
         }
     }
 

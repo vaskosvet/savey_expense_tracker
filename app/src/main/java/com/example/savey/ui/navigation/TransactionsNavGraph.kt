@@ -17,14 +17,20 @@ fun TransactionsNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = TransactionEntryDestination.route,
+        startDestination = HomeDestination.route,
         modifier = modifier
     ) {
         composable(TransactionEntryDestination.route) {
-            TransactionEntryScreen(navigateBack = { navController.popBackStack() }, onNavigateUp = { /*TODO*/ })
+            TransactionEntryScreen(
+                navigateBack = navController::popBackStack,
+                onNavigateUp = navController::navigateUp
+            )
         }
         composable(HomeDestination.route) {
-            HomeScreen(navigateToTransactionEntry = { /*TODO*/ }, navigateToTransactionUpdate = { /*TODO*/ })
+            HomeScreen(
+                navigateToTransactionEntry = { navController.navigate(TransactionEntryDestination.route) },
+                navigateToTransactionUpdate = { /*TODO*/ }
+            )
         }
     }
 }

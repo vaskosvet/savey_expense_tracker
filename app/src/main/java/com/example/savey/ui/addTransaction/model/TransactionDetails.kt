@@ -3,7 +3,7 @@ package com.example.savey.ui.addTransaction.model
 import com.example.savey.data.TransactionEntity
 
 data class TransactionDetails(
-    val id: Int = 0,
+    val id: Int = 1,
     val type: Int = 0,
     val merchant: String = "",
     val price: String = "",
