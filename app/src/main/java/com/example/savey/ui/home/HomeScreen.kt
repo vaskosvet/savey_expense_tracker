@@ -2,8 +2,10 @@ package com.example.savey.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,9 +16,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,7 +53,7 @@ fun HomeScreen(
 ) {
     val homeUIState by viewModel.homeUIState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
+    val sheetState = rememberModalBottomSheetState()
     Scaffold(
         modifier = modifier.padding(16.dp),
         topBar = {
@@ -68,10 +72,20 @@ fun HomeScreen(
             }
         }
     ) { paddingValues ->
+        if (viewModel.showBottomSheet)
+            ModalBottomSheet(
+                sheetState = sheetState,
+                onDismissRequest = viewModel::closeBottomSheet
+            ) {
+                viewModel.chosenTransaction?.let {
+                    BottomSheetContent(transaction = it)
+                }
+            }
+
         TransactionsList(
             modifier = Modifier.padding(paddingValues),
             transactionsList = homeUIState.itemList,
-            onItemClick = { it.id} // TODO
+            onItemClick = viewModel::onTransactionClicked
         )
     }
 }
@@ -122,5 +136,44 @@ private fun TransactionItem(
             }
         }
 
+    }
+}
+
+@Composable
+fun BottomSheetContent(transaction: TransactionEntity) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_account_circle),
+            contentDescription = null,
+            alignment = Alignment.Center
+        ) // TODO change image after changing transaction types.
+        KeyValueRow(
+            key = stringResource(id = R.string.price),
+            value = transaction.price.toString()
+        )
+        KeyValueRow(
+            key = stringResource(id = R.string.merchant),
+            value = transaction.merchant
+        )
+    }
+}
+
+@Composable
+fun KeyValueRow(
+    key: String,
+    value: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = key)
+        Spacer(modifier = Modifier.weight(1f))
+        Text(text = value)
     }
 }
