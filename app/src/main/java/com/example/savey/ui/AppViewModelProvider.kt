@@ -11,7 +11,7 @@ import com.example.savey.ui.home.HomeViewModel
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            TransactionEntryViewModel(saveyApplication().container.transactionsRepository)
+            TransactionEntryViewModel(saveyApplication(), saveyApplication().container.transactionsRepository)
         }
         initializer {
             HomeViewModel(saveyApplication().container.transactionsRepository)

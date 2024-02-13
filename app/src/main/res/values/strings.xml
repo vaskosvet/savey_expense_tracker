@@ -2,8 +2,21 @@
     <string name="app_name">savey</string>
     <string name="merchant">Merchant</string>
     <string name="home">Home</string>
-    <string name="online_transaction">Online Transaction</string>
     <string name="enter_a_new_transaction">Enter a new transaction</string>
     <string name="price">Price</string>
     <string name="save">Save</string>
+    <string name="example_merchant_amazon">e.g. Amazon</string>
+    <string name="example_price_zero">0.00</string>
+    <string name="choose_transaction_type">Choose a transaction type</string>
+    <string name="online_transaction">Online Transaction</string>
+    <string name="pos_payment">POS Payment</string>
+    <string name="subscription">Subscription</string>
+    <string name="transport">Transport</string>
+    <string name="groceries">Groceries</string>
+    <string name="shopping">Shopping</string>
+    <string name="utilities">Utilities</string>
+    <string name="donations">Donations</string>
+    <string name="home_category">Home</string>
+    <string name="sport">Sport</string>
+    <string name="lifestyle">Lifestyle</string>
 </resources>

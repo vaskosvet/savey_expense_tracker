@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.savey.ui.addTransaction.model.TransactionDetails
 import com.example.savey.ui.addTransaction.model.TransactionUIState
+import com.example.savey.utils.TransactionUtils
 import java.text.NumberFormat
 
 @Entity(tableName = "transactions")
@@ -24,9 +25,9 @@ data class TransactionEntity(
         return NumberFormat.getCurrencyInstance().format(price)
     }
 
-    private fun toTransactionDetails(): TransactionDetails = TransactionDetails(
+    fun toTransactionDetails(): TransactionDetails = TransactionDetails(
         id = id,
-        type = type,
+        type = TransactionUtils.getTransactionTypeDetails(type),
         merchant = merchant,
         price = price.toString(),
         time = time

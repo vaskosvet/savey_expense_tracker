@@ -7,7 +7,7 @@ interface TransactionsRepository {
 
     fun getTransactionStream(id: Int): Flow<TransactionEntity?>
 
-    suspend fun insertTransactionItem(transaction: TransactionEntity)
+    suspend fun insertTransactionItem(transaction: TransactionEntity): Long
 
     suspend fun deleteTransaction(transaction: TransactionEntity)
 

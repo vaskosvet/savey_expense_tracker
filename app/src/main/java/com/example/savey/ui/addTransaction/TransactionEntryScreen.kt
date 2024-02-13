@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -14,12 +18,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.savey.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.savey.R
 import com.example.savey.SaveyTopAppBar
-import com.example.savey.UtilsConstants.Companion.TRANSACTION_ENTRY_ROUTE
+import com.example.savey.utils.Constants
+import com.example.savey.utils.Constants.Companion.TRANSACTION_ENTRY_ROUTE
 import com.example.savey.ui.navigation.NavigationDestination
 import com.example.savey.ui.addTransaction.model.TransactionDetails
 import com.example.savey.ui.addTransaction.model.TransactionUIState
@@ -58,19 +65,24 @@ fun TransactionEntryScreen(
                 scope.launch {
                     viewModel.saveTransaction()
                 }
-            }
+            },
+            onTransactionTypeSelected = viewModel::onTransactionTypeSelected,
+            changePopUpVisibility = viewModel::changePopUpVisibility
         )
     }
 }
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionEntryBody(
+    modifier: Modifier = Modifier,
     transactionUIState: TransactionUIState,
     onTransactionValueChange: (TransactionDetails) -> Unit,
     onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onTransactionTypeSelected: (Int, Int) -> Unit,
+    changePopUpVisibility: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -79,12 +91,16 @@ fun TransactionEntryBody(
             modifier = Modifier.fillMaxWidth(),
             value = transactionUIState.transactionDetails.price,
             onValueChange = {
-                onTransactionValueChange(transactionUIState.transactionDetails.copy(price = it, type = 1))
+                onTransactionValueChange(transactionUIState.transactionDetails.copy(price = it))
             },
             shape = MaterialTheme.shapes.large,
+            placeholder = {
+                Text(text = stringResource(id = R.string.example_price_zero))
+            },
             label = {
                 Text(text = stringResource(id = R.string.price))
-            }
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
 
         OutlinedTextField(
@@ -94,10 +110,52 @@ fun TransactionEntryBody(
                 onTransactionValueChange(transactionUIState.transactionDetails.copy(merchant = it))
             },
             shape = MaterialTheme.shapes.large,
-            label   = {
+            placeholder = {
+                Text(text = stringResource(id = R.string.example_merchant_amazon))
+            },
+            label = {
                 Text(text = stringResource(id = R.string.merchant))
             }
         )
+        ExposedDropdownMenuBox(
+            expanded = transactionUIState.isPopUpVisible,
+            onExpandedChange = {
+                changePopUpVisibility()
+            },
+        ) {
+
+            OutlinedTextField(
+                modifier = Modifier.menuAnchor(),
+                readOnly = true,
+                value = transactionUIState.selectedTransactionText,
+                onValueChange = {},
+                label = {
+                    Text(stringResource(id = R.string.choose_transaction_type), fontWeight = FontWeight.Bold)
+                },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = transactionUIState.isPopUpVisible)
+               },
+                shape = MaterialTheme.shapes.large
+            )
+
+            ExposedDropdownMenu(
+                expanded = transactionUIState.isPopUpVisible,
+                onDismissRequest = {
+                    changePopUpVisibility()
+                },
+            ) {
+                Constants.transactionTypes.forEach { transactionType ->
+                    val (type, stringResource) = transactionType
+                    DropdownMenuItem(
+                        text = { Text(stringResource(stringResource)) },
+                        onClick = {
+                            onTransactionTypeSelected(type, stringResource)
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+            }
+        }
 
         Button(
             modifier = Modifier.fillMaxWidth(),

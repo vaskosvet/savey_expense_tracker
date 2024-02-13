@@ -1,6 +1,8 @@
 package com.example.savey.ui.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,9 +10,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -27,15 +31,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.savey.R
 import com.example.savey.SaveyTopAppBar
-import com.example.savey.UtilsConstants.Companion.HOME_ROUTE
+import com.example.savey.utils.Constants.Companion.HOME_ROUTE
 import com.example.savey.data.TransactionEntity
 import com.example.savey.ui.AppViewModelProvider
+import com.example.savey.ui.addTransaction.model.TransactionDetails
 import com.example.savey.ui.navigation.NavigationDestination
 
 object HomeDestination : NavigationDestination {
@@ -93,8 +100,8 @@ fun HomeScreen(
 
 @Composable
 private fun TransactionsList(
-    transactionsList: List<TransactionEntity>,
-    onItemClick: (TransactionEntity) -> Unit,
+    transactionsList: List<TransactionDetails>,
+    onItemClick: (TransactionDetails) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -109,7 +116,7 @@ private fun TransactionsList(
 
 @Composable
 private fun TransactionItem(
-    transaction: TransactionEntity,
+    transaction: TransactionDetails,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
@@ -120,17 +127,23 @@ private fun TransactionItem(
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.ic_account_circle),
-                contentDescription = null,
                 modifier = Modifier
-                    .align(Alignment.CenterVertically)
+                    .size(32.dp)
+                    .border(1.dp, Color.Black, CircleShape)
+                    .padding(2.dp)
                     .clip(CircleShape)
-                    .padding(end = 8.dp)
+                    .align(Alignment.CenterVertically),
+                painter = painterResource(id = transaction.type.imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
             )
 
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = stringResource(R.string.online_transaction).plus(":")) // Todo add transaction type
-                Text(modifier = Modifier.align(Alignment.End),text = transaction.price.toString())
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp)
+            ) {
+                Text(text = stringResource(transaction.type.stringRes))
+                Text(modifier = Modifier.align(Alignment.End), text = transaction.price)
                 if (transaction.merchant.isNotBlank())
                     Text(text = "${stringResource(id = R.string.merchant)}: ${transaction.merchant}") // TODO
             }
@@ -140,7 +153,7 @@ private fun TransactionItem(
 }
 
 @Composable
-fun BottomSheetContent(transaction: TransactionEntity) {
+fun BottomSheetContent(transaction: TransactionDetails) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,10 +161,20 @@ fun BottomSheetContent(transaction: TransactionEntity) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_account_circle),
+            modifier = Modifier
+                .size(42.dp)
+                .border(1.dp, Color.Black, CircleShape)
+                .padding(2.dp)
+                .clip(CircleShape)
+                .align(Alignment.CenterHorizontally),
+            painter = painterResource(id = transaction.type.imageRes),
             contentDescription = null,
-            alignment = Alignment.Center
-        ) // TODO change image after changing transaction types.
+            contentScale = ContentScale.Fit
+        )
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = stringResource(id = transaction.type.stringRes)
+        )
         KeyValueRow(
             key = stringResource(id = R.string.price),
             value = transaction.price.toString()
@@ -160,6 +183,16 @@ fun BottomSheetContent(transaction: TransactionEntity) {
             key = stringResource(id = R.string.merchant),
             value = transaction.merchant
         )
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            onClick = { },
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text("Edit") // TODO
+        }
     }
 }
 
